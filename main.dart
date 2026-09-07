@@ -3,12 +3,10 @@ void main() {
   //נתונים להמשך
   String NCtemp ="";
   String NCtime ="";
-  //קריאת הקובץ ופירוק בתוך רשימה
   File file = File('readings.json'); 
   String contents = file.readAsStringSync();
   List<String>list = contents.split(",");
     List<String> list2 = [];
-  //שימוש נתונים מההתחלה ופירוק ספיציפי לכל פארמטר
     for (int i = 0; i < list.length; i+=2){
   NCtime = list[i];
   NCtemp = list[i+1];
@@ -23,6 +21,7 @@ void main() {
     print(MaxTemp(list2));
     print(MinTemp(list2));
     print(averagetemp(list2));
+    print (tempAbove25(list2));
   }
   double MaxTemp(List<String> list2){
     double CurrentMax = 0;
@@ -52,4 +51,15 @@ void main() {
     }
     sam = sam/list2.length;
     return sam;
+}
+int tempAbove25(List<String> list2){
+  int counter = 0;
+  for (int i = 0; i<list2.length;i++){
+    double list = double.parse(list2[i]);
+    if (list>25){
+      counter++;  
+    }
+  }
+
+  return counter;
 }
