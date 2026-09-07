@@ -1,6 +1,7 @@
 import 'dart:io';
+import 'package:http/http.dart' as http;
+
 void main() {
-  //נתונים להמשך
   String NCtemp ="";
   String NCtime ="";
   File file = File('readings.json'); 
@@ -14,14 +15,14 @@ void main() {
   String cleantemp = NCtemp.replaceAll(RegExp(r'[^A-Z0-9.]'), '');
       if (cleantime[0] == ":"){
         cleantime = cleantime.substring(1);
-      }
-      
+      }   
       list2.add(cleantemp);
     }
     print(MaxTemp(list2));
     print(MinTemp(list2));
     print(averagetemp(list2));
     print (tempAbove25(list2));
+    apiReading();
   }
   double MaxTemp(List<String> list2){
     double CurrentMax = 0;
@@ -62,4 +63,14 @@ int tempAbove25(List<String> list2){
   }
 
   return counter;
+}
+void apiReading()async{
+  var url = Uri.parse('https://v2.jokeapi.dev/joke/Misc,Programming?format=xml&safe-mode&type=single');
+  var response = await http.get(url);  
+  String urlAsString = response.body.toString(); 
+  print (response.body);
+  List<String>list = urlAsString.split("joke");
+  print (list[1]);
+  String cleanJoke = list[1].replaceAll(RegExp(r'[^A-Z0-9%.]'), '');
+  print(cleanJoke);
 }
