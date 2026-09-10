@@ -105,7 +105,9 @@ void main()async{
    for (int i = 0; i<jokesList.length;i++){
       String clearJoke = jokesList[i].replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
       int jokeLength = clearJoke.length;
-      if (jokeLength==lettersSum/jokesList.length){
+      double doubleAverage = lettersSum/jokesList.length;
+      int averageOfLength = doubleAverage.toInt();
+      if (jokeLength==averageOfLength){
         check = true;
         print ("Joke with the exact average letters: ${jokesList[i]} with ${jokeLength} letters");
       }
