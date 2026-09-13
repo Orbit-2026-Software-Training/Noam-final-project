@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
+
 void main() async {
   String NCtemp = "";
   String NCtime = "";
@@ -18,16 +19,20 @@ void main() async {
     NCtemp = list[i + 1];
     list3 = [];
     list4 = [];
-    for (int j = 0; j<NCtemp.length;j++){
-      int unitemp=NCtemp.codeUnitAt(j);
-      if (unitemp>=48 && unitemp<=57 || unitemp==45|| unitemp==46){
+    for (int j = 0; j < NCtemp.length; j++) {
+      int unitemp = NCtemp.codeUnitAt(j);
+      if (unitemp >= 48 && unitemp <= 57 || unitemp == 45 || unitemp == 46) {
         list3.add(NCtemp[j]);
       }
     }
     cleantemp = list3.join();
-    for (int j = 0; j<NCtime.length;j++){
-      int unitTime=NCtime.codeUnitAt(j);
-      if (unitTime>=48 && unitTime<=57 || unitTime>= 97 && unitTime<=122 || unitTime<=90&& unitTime>=65|| unitTime==58|| unitTime==45){
+    for (int j = 0; j < NCtime.length; j++) {
+      int unitTime = NCtime.codeUnitAt(j);
+      if (unitTime >= 48 && unitTime <= 57 ||
+          unitTime >= 97 && unitTime <= 122 ||
+          unitTime <= 90 && unitTime >= 65 ||
+          unitTime == 58 ||
+          unitTime == 45) {
         list4.add(NCtime[j]);
       }
       cleantime = list4.join();
@@ -49,45 +54,60 @@ void main() async {
       jokesList.add(JokeList[1]);
     }
   }
+
   await apiReading();
-  MaxTempLongestLetters(list2, jokesList,0,0,list,cleanJokeLetters);
-  MinTempShortestLetters(list2, jokesList,0,0,list,cleanJokeLetters);
-  averagetempAverageLetters(list2, jokesList,0,list);
-  print(tempAbove25(list2,list));
+  MaxTempLongestLetters(list2, jokesList, 0, 0, cleanJokeLetters);
+  MinTempShortestLetters(list2, jokesList, 0, 0, cleanJokeLetters);
+  averagetempAverageLetters(list2, jokesList, cleanJokeLetters);
+  print(tempAbove25(list2));
   //print ( list2);
 }
 
-void MaxTempLongestLetters(List<String> list2, List<String> jokesList,j,jokeLength,Listt,List<String> cleanJokeLetters) {
+void MaxTempLongestLetters(
+  List<String> list2,
+  List<String> jokesList,
+  j,
+  jokeLength,
+  List<String> cleanJokeLetters,
+) {
   double CurrentMax = 0;
   int currentMaxLetters = 0;
   List<String> cleanJokes = [];
+  List<String> Joke = [];
+  List<String> Jokes = [];
   String longestJoke = "";
   for (int i = 0; i < list2.length; i++) {
-    if (Listt > CurrentMax) {
-      CurrentMax = Listt;
+    double list = double.parse(list2[i]);
+    if (list > CurrentMax) {
+      CurrentMax = list;
     }
   }
   for (int i = 0; i < jokesList.length; i++) {
     cleanJokeLetters.clear();
+    Joke.clear();
     for (int j = 0; j < jokesList[i].length; j++) {
       int unitJokeLetter = jokesList[i].codeUnitAt(j);
-      if (unitJokeLetter >= 48 &&
-          unitJokeLetter <= 57 ||
-          unitJokeLetter >= 97 &&
-          unitJokeLetter <= 122 ||
+      if (unitJokeLetter == 32) {
+        Joke.add(jokesList[i][j]);
+      }
+      if (unitJokeLetter >= 48 && unitJokeLetter <= 57 ||
+          unitJokeLetter >= 97 && unitJokeLetter <= 122 ||
           unitJokeLetter <= 90 && unitJokeLetter >= 65 ||
           unitJokeLetter == 58 ||
           unitJokeLetter == 45) {
         cleanJokeLetters.add(jokesList[i][j]);
+        Joke.add(jokesList[i][j]);
       }
     }
     String clearJoke = cleanJokeLetters.join();
     cleanJokes.add(clearJoke);
+    String jokeWithSpaces = Joke.join();
+    Jokes.add(jokeWithSpaces);
+
     for (int j = 0; j < cleanJokes.length; j++) {
       if (cleanJokes[j].length > currentMaxLetters) {
         currentMaxLetters = cleanJokes[j].length;
-        jokeLength = currentMaxLetters;
-        longestJoke = cleanJokes[j];
+        longestJoke = Jokes[j];
       }
     }
   }
@@ -97,25 +117,85 @@ void MaxTempLongestLetters(List<String> list2, List<String> jokesList,j,jokeLeng
   print("Max temperature: ${CurrentMax}");
 }
 
-void MinTempShortestLetters(List<String> list2, List<String> jokesList,j,jokeLength,Listt,List<String> cleanJokeLetters) {
+void MinTempShortestLetters(
+  List<String> list2,
+  List<String> jokesList,
+  j,
+  jokeLength,
+  List<String> cleanJokeLetters,
+) {
   double currentMin = 1000;
   int currentMinLetters = 1000;
   String shortestJoke = "";
   String clearJoke = "";
   List<String> cleanJokes = [];
+  List<String> Joke = [];
+  List<String> Jokes = [];
+  String ShortestJoke = "";
   for (int i = 0; i < list2.length; i++) {
-    if (Listt < currentMin) {
-      currentMin = Listt;
+    double list = double.parse(list2[i]);
+    if (list < currentMin) {
+      currentMin = list;
     }
   }
   for (int i = 0; i < jokesList.length; i++) {
     cleanJokeLetters.clear();
+    Joke.clear();
     for (int j = 0; j < jokesList[i].length; j++) {
       int unitJokeLetter = jokesList[i].codeUnitAt(j);
-      if (unitJokeLetter >= 48 &&
-          unitJokeLetter <= 57 ||
-          unitJokeLetter >= 97 &&
-          unitJokeLetter <= 122 ||
+      if (unitJokeLetter == 32) {
+        Joke.add(jokesList[i][j]);
+      }
+      if (unitJokeLetter >= 48 && unitJokeLetter <= 57 ||
+          unitJokeLetter >= 97 && unitJokeLetter <= 122 ||
+          unitJokeLetter <= 90 && unitJokeLetter >= 65 ||
+          unitJokeLetter == 58 ||
+          unitJokeLetter == 45) {
+        cleanJokeLetters.add(jokesList[i][j]);
+        Joke.add(jokesList[i][j]);
+      }
+    }
+    String clearJoke = cleanJokeLetters.join();
+    cleanJokes.add(clearJoke);
+    String jokeWithSpaces = Joke.join();
+    Jokes.add(jokeWithSpaces);
+  }
+  for (int j = 0; j < cleanJokes.length; j++) {
+    if (cleanJokes[j].length < currentMinLetters) {
+      shortestJoke = cleanJokes[j];
+      currentMinLetters = shortestJoke.length;
+      ShortestJoke = Jokes[j];
+    }
+  }
+  print(
+    "Joke with the least letters: ${ShortestJoke} with ${currentMinLetters} letters",
+  );
+  print("Min temperature: ${currentMin}");
+}
+
+void averagetempAverageLetters(
+  List<String> list2,
+  List<String> jokesList,
+  jokeLength,
+) {
+  double sum = 0;
+  num lettersSum = 0;
+  String clearJoke = "";
+  List<String> Jokes = [];
+  bool check = false;
+  for (int i = 0; i < list2.length; i++) {
+    double list = double.parse(list2[i]);
+    sum = sum + list;
+  }
+  sum = sum / list2.length;
+  print("Average temperature: ${sum}");
+
+  for (int i = 0; i < jokesList.length; i++) {
+    List<String> cleanJokeLetters = [];
+    for (int j = 0; j < jokesList[i].length; j++) {
+      int unitJokeLetter = jokesList[i].codeUnitAt(j);
+      if (unitJokeLetter >= 48 && unitJokeLetter <= 57 ||
+          unitJokeLetter >= 97 && unitJokeLetter <= 122 ||
           unitJokeLetter <= 90 && unitJokeLetter >= 65 ||
           unitJokeLetter == 58 ||
           unitJokeLetter == 45) {
@@ -123,60 +203,31 @@ void MinTempShortestLetters(List<String> list2, List<String> jokesList,j,jokeLen
       }
     }
     clearJoke = cleanJokeLetters.join();
-    cleanJokes.add(clearJoke);
-    }
-    for (int j = 0; j < cleanJokes.length; j++) {
-      if (cleanJokes[j].length < currentMinLetters) {
-        shortestJoke = cleanJokes[j];
-        currentMinLetters = shortestJoke.length;
-      }
-    }
-  print(
-    "Joke with the least letters: ${shortestJoke} with ${currentMinLetters} letters",
-  );
-  print("Min temperature: ${currentMin}");
-}
-
-void averagetempAverageLetters(List<String> list2, List<String> jokesList,jokeLength,Listt) {
-  double sum = 0;
-  num lettersSum = 0;
-  int i = 0;
-  String clearJoke = "";
-  for (int i = 0; i < list2.length; i++) {
-    sum = sum + Listt;
-  }
-  double average = sum / list2.length;
-  print("Average temperature: ${average}");
-  for (int i = 0; i < jokesList.length; i++) {
-    List<String>cleanJokeLetters = [];
-    for (int j = 0; j<jokesList[i].length;j++){
-      int unitJokeLetter=jokesList[i].codeUnitAt(j);
-      if (unitJokeLetter>=48 && unitJokeLetter<=57 || unitJokeLetter>= 97 && unitJokeLetter<=122 || unitJokeLetter<=90&& unitJokeLetter>=65|| unitJokeLetter==58|| unitJokeLetter==45){
-        cleanJokeLetters.add(jokesList[i]);
-      }
-    }
-    clearJoke = cleanJokeLetters.join();
     lettersSum = lettersSum + clearJoke.length;
-  }
-  for (i = 0; i < jokesList.length; i++) {
-    jokeLength = clearJoke.length;
+    Jokes.add(clearJoke);
   }
   double lettersAverage = lettersSum / jokesList.length;
-  if (jokeLength == lettersAverage) {
-    print(
-      "Joke with the exact average letters: ${jokesList[i]} with ${jokeLength} letters",
-    );
-  } else {
-    print("there are no Joke with the exact average letters");
+  for (int g = 0; g < Jokes.length; g++) {
+    if (Jokes[g].length == lettersAverage) {
+      print(
+        "Joke with the exact average letters: ${jokesList[g]} with ${Jokes[g].length} letters",
+      );
+      check = true;
+    }
+  }
+  if (check == false) {
+    print("No joke with the exact average letters");
   }
 }
 
-int tempAbove25(List<String> list2,Listt) {
+int tempAbove25(List<String> list2) {
   int counter = 0;
   for (int i = 0; i < list2.length; i++) {
-    if (Listt > 25) {
+    double list = double.parse(list2[i]);
+    if (list > 25) {
       counter++;
     }
   }
+
   return counter;
 }
