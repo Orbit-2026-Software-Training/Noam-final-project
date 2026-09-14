@@ -1,47 +1,18 @@
   import 'dart:io';
   import 'package:http/http.dart' as http;
-
+  import 'dart:convert';
   void main() async {
-    String NCtemp = "";
-    String NCtime = "";
     File file = File('readings.json');
     String contents = file.readAsStringSync();
-    List<String> list = contents.split(",");
+    List<dynamic> jsonFileList = jsonDecode(contents);
+    List<String> timesList = [];
     List<String> list2 = [];
     List<String> jokesList = [];
-    List<String> list3 = [];
-    List<String> list4 = [];
-    String cleantime = "";
-    String cleantemp = "";
     List<String> cleanJokeLetters = [];
-    for (int i = 0; i < list.length; i += 2) {
-      NCtime = list[i];
-      NCtemp = list[i + 1];
-      list3 = [];
-      list4 = [];
-      for (int j = 0; j < NCtemp.length; j++) {
-        int unitemp = NCtemp.codeUnitAt(j);
-        if (unitemp >= 48 && unitemp <= 57 || unitemp == 45 || unitemp == 46) {
-          list3.add(NCtemp[j]);
-        }
-      }
-      cleantemp = list3.join();
-      for (int j = 0; j < NCtime.length; j++) {
-        int unitTime = NCtime.codeUnitAt(j);
-        if (unitTime >= 48 && unitTime <= 57 ||
-            unitTime >= 97 && unitTime <= 122 ||
-            unitTime <= 90 && unitTime >= 65 ||
-            unitTime == 58 ||
-            unitTime == 45) {
-          list4.add(NCtime[j]);
-        }
-        cleantime = list4.join();
-      }
-      if (cleantime[0] == ":") {
-        cleantime = cleantime.substring(1);
-      }
-      list2.add(cleantemp);
-    }
+    for (var item in jsonFileList) {
+    timesList.add(item['time'].toString());
+    list2.add(item['temperature'].toString());
+  }
     Future<void> apiReading() async {
       for (int i = 0; i < 10; i++) {
         var url = Uri.parse(
@@ -56,9 +27,9 @@
     }
 
     await apiReading();
-    MaxTempLongestLetters(list2, jokesList, 0, 0, cleanJokeLetters);
-    MinTempShortestLetters(list2, jokesList, 0, 0, cleanJokeLetters);
-    averagetempAverageLetters(list2, jokesList,0, cleanJokeLetters);
+    MaxTempLongestLetters(list2, jokesList,  cleanJokeLetters);
+    MinTempShortestLetters(list2, jokesList, cleanJokeLetters);
+    averagetempAverageLetters(list2, jokesList, cleanJokeLetters);
     print(tempAbove25(list2));
     //print ( list2);
   }
@@ -97,8 +68,6 @@
   void MaxTempLongestLetters(
     List<String> list2,
     List<String> jokesList,
-    j,
-    jokeLength,
     List<String> cleanJokeLetters,
   ) {
     double CurrentMax = 0;
@@ -128,8 +97,6 @@
   void MinTempShortestLetters(
     List<String> list2,
     List<String> jokesList,
-    j,
-    jokeLength,
     List<String> cleanJokeLetters,
   ) {
     double currentMin = 1000;
@@ -159,7 +126,6 @@
   void averagetempAverageLetters(
     List<String> list2,
     List<String> jokesList,
-    jokeLength,
     List<String> cleanJokeLetters,
   ) {
     double sum = 0;
