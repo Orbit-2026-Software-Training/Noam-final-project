@@ -2,6 +2,7 @@
   import 'package:http/http.dart' as http;
   import 'dart:convert';
   void main() async {
+    //reading the json file and seperate the temp and the time to diffrent lists
     File file = File('readings.json');
     String contents = file.readAsStringSync();
     List<dynamic> jsonFileList = jsonDecode(contents);
@@ -13,6 +14,7 @@
     timesList.add(item['time'].toString());
     list2.add(item['temperature'].toString());
   }
+    //reading the api and make a list with all the 10 jokes
     Future<void> apiReading() async {
       for (int i = 0; i < 10; i++) {
         var url = Uri.parse(
@@ -30,9 +32,10 @@
     MaxTempLongestLetters(list2, jokesList,  cleanJokeLetters);
     MinTempShortestLetters(list2, jokesList, cleanJokeLetters);
     averagetempAverageLetters(list2, jokesList, cleanJokeLetters);
-    print(tempAbove25(list2));
-    //print ( list2);
+    tempAbove25(list2);
+    
   }
+  //a func that give me the counting of the letters
   (List<String>,List<String>,int) countLetters(List<String> jokesList, List<String> cleanJokeLetters) {
     List<String> Joke = [];
     List<String> Jokes = [];
@@ -55,7 +58,7 @@
           Joke.add(jokesList[i][j]);
         }
       }  
-    
+    //updating 2 list one a joke with spaces for the print and one without for .length
       String clearJoke = cleanJokeLetters.join();
       cleanJokes.add(clearJoke);
       String jokeWithSpaces = Joke.join();
@@ -65,6 +68,7 @@
   }
   return (Jokes, cleanJokes,lettersSum);
   }
+  //function that doing the part of stage 1 of max temp and the part of stage 3 that give me the longest joke
   void MaxTempLongestLetters(
     List<String> list2,
     List<String> jokesList,
@@ -94,6 +98,7 @@
     print("Max temperature: ${CurrentMax}");
 
   }
+  //function that doing the part of stage 1 of min temp and the part of stage 3 that give me the shortest joke
   void MinTempShortestLetters(
     List<String> list2,
     List<String> jokesList,
@@ -122,7 +127,7 @@
     );
     print("Min temperature: ${currentMin}");
   }
-
+  //function that doing the part of stage 1 of avrage temp and the part of stage 3 that give me the avrage num of letters
   void averagetempAverageLetters(
     List<String> list2,
     List<String> jokesList,
@@ -155,8 +160,8 @@
       print("No joke with the exact average letters");
     }
   }
-
-  int tempAbove25(List<String> list2) {
+//function that doing the stage 2 that counting how many times temp was over 25
+  void tempAbove25(List<String> list2) {
     int counter = 0;
     for (int i = 0; i < list2.length; i++) {
       double list = double.parse(list2[i]);
@@ -165,5 +170,5 @@
       }
     }
 
-    return counter;
+    print(counter);
   }
