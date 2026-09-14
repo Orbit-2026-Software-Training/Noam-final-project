@@ -33,6 +33,7 @@
     MinTempShortestLetters(list2, jokesList, cleanJokeLetters);
     averagetempAverageLetters(list2, jokesList, cleanJokeLetters);
     tempAbove25(list2);
+    sortingJson(list2);
     
   }
   //a func that give me the counting of the letters
@@ -172,3 +173,27 @@
 
     print(counter);
   }
+
+void sortingJson(List<String> list2){
+  double currentMaxTemp = 0;
+  int index = 0;
+  List<double>SortList = [];
+  List<double>list1=[];
+  for (int g = 0; g < list2.length; g++) { 
+    double list = double.parse(list2[g]);
+    list1.add(list);
+  }
+  for (int g = 0; g < list2.length; g++) {    
+      for (int i = 0; i < list1.length; i++) {
+        if (list1[i] > currentMaxTemp) {
+          currentMaxTemp = list1[i];
+          index = list1.indexOf(list1[i]);
+      }
+    }
+    SortList.add(currentMaxTemp);
+    list1.removeAt(index);
+    
+  }
+  print (SortList);
+  //print (currentMaxTemp);
+}
