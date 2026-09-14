@@ -2,6 +2,7 @@
   import 'package:http/http.dart' as http;
   import 'dart:convert';
   void main() async {
+    //reading the json file and seperate the temp and the time to diffrent lists
     File file = File('readings.json');
     String contents = file.readAsStringSync();
     List<dynamic> jsonFileList = jsonDecode(contents);
@@ -13,6 +14,7 @@
     timesList.add(item['time'].toString());
     list2.add(item['temperature'].toString());
   }
+    //reading the api and make a list with all the 10 jokes
     Future<void> apiReading() async {
       for (int i = 0; i < 10; i++) {
         var url = Uri.parse(
@@ -28,11 +30,15 @@
 
     await apiReading();
     MaxTempLongestLetters(list2, jokesList,  cleanJokeLetters);
-    MinTempShortestLetters(list2, jokesList, 0, 0, cleanJokeLetters);
-    averagetempAverageLetters(list2, jokesList,0, cleanJokeLetters);
-    print(tempAbove25(list2));
+    MinTempShortestLetters(list2, jokesList,cleanJokeLetters);
+    averagetempAverageLetters(list2, jokesList, cleanJokeLetters);
+    tempAbove25(list2);
     //print ( list2);
+
+    sortingJson(list2);
+    
   }
+  //a func that give me the counting of the letters
   (List<String>,List<String>,int) countLetters(List<String> jokesList, List<String> cleanJokeLetters) {
     List<String> Joke = [];
     List<String> Jokes = [];
@@ -43,9 +49,6 @@
       Joke.clear();
       for (int j = 0; j < jokesList[i].length; j++) {
         int unitJokeLetter = jokesList[i].codeUnitAt(j);
-        if (unitJokeLetter == 32) {
-          Joke.add(jokesList[i][j]);
-        }
         if (unitJokeLetter >= 48 && unitJokeLetter <= 57 ||
             unitJokeLetter >= 97 && unitJokeLetter <= 122 ||
             unitJokeLetter <= 90 && unitJokeLetter >= 65 ||
@@ -54,8 +57,11 @@
           cleanJokeLetters.add(jokesList[i][j]);
           Joke.add(jokesList[i][j]);
         }
+        else{
+          Joke.add(jokesList[i][j]);
+        }
       }  
-    
+    //updating 2 list one a joke with spaces for the print and one without for .length
       String clearJoke = cleanJokeLetters.join();
       cleanJokes.add(clearJoke);
       String jokeWithSpaces = Joke.join();
@@ -65,6 +71,7 @@
   }
   return (Jokes, cleanJokes,lettersSum);
   }
+  //function that doing the part of stage 1 of max temp and the part of stage 3 that give me the longest joke
   void MaxTempLongestLetters(
     List<String> list2,
     List<String> jokesList,
@@ -94,11 +101,10 @@
     print("Max temperature: ${CurrentMax}");
 
   }
+  //function that doing the part of stage 1 of min temp and the part of stage 3 that give me the shortest joke
   void MinTempShortestLetters(
     List<String> list2,
     List<String> jokesList,
-    j,
-    jokeLength,
     List<String> cleanJokeLetters,
   ) {
     double currentMin = 1000;
@@ -124,11 +130,10 @@
     );
     print("Min temperature: ${currentMin}");
   }
-
+  //function that doing the part of stage 1 of avrage temp and the part of stage 3 that give me the avrage num of letters
   void averagetempAverageLetters(
     List<String> list2,
     List<String> jokesList,
-    jokeLength,
     List<String> cleanJokeLetters,
   ) {
     double sum = 0;
@@ -158,8 +163,8 @@
       print("No joke with the exact average letters");
     }
   }
-
-  int tempAbove25(List<String> list2) {
+//function that doing the stage 2 that counting how many times temp was over 25
+  void tempAbove25(List<String> list2) {
     int counter = 0;
     for (int i = 0; i < list2.length; i++) {
       double list = double.parse(list2[i]);
@@ -168,5 +173,29 @@
       }
     }
 
-    return counter;
+    print(counter);
+  }
+//function that sorting all the temps from highest to lowest
+  void sortingJson(List<String> list2){
+    List<double>SortList = [];
+    List<double>list1=[];
+    for (int g = 0; g < list2.length; g++) { 
+      double list = double.parse(list2[g]);
+      list1.add(list);
+    }
+    while (list1.isNotEmpty) {
+        int index = 0; 
+        double currentMaxTemp = 0;
+        for (int i = 0; i < list1.length; i++) {
+          if (list1[i] > currentMaxTemp) {
+            currentMaxTemp = list1[i];
+            index = i;
+        }
+      }
+      SortList.add(currentMaxTemp);
+      list1.removeAt(index);
+      
+    }
+    print (SortList);
+    
   }
