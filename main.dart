@@ -34,8 +34,9 @@ void main() async {
   MaxTempLongestLetters(list2, jokesList, cleanJokeLetters);
   MinTempShortestLetters(list2, jokesList, cleanJokeLetters);
   averagetempAverageLetters(list2, jokesList, cleanJokeLetters);
-  tempAbove25(list2);
-  sortTempsHighToLow(list2);
+  percentageErrorCalculator(list2, jokesList, cleanJokeLetters);
+  //tempAbove25(list2);
+  //sortTempsHighToLow(list2);
 }
 
 //a func that give me the counting of the letters
@@ -74,7 +75,7 @@ void main() async {
 }
 
 //function that doing the part of stage 1 of max temp and the part of stage 3 that give me the longest joke
-void MaxTempLongestLetters(
+(String,int,double) MaxTempLongestLetters(
   List<double> list2,
   List<String> jokesList,
   List<String> cleanJokeLetters,
@@ -102,10 +103,11 @@ void MaxTempLongestLetters(
     "Joke with the most letters: ${longestJoke} with ${currentMaxLetters} letters",
   );
   print("Max temperature: ${CurrentMax}");
+  return (longestJoke,currentMaxLetters,CurrentMax);
 }
 
 //function that doing the part of stage 1 of min temp and the part of stage 3 that give me the shortest joke
-void MinTempShortestLetters(
+(String,int,double) MinTempShortestLetters(
   List<double> list2,
   List<String> jokesList,
   List<String> cleanJokeLetters,
@@ -133,10 +135,11 @@ void MinTempShortestLetters(
     "Joke with the least letters: ${ShortestJoke} with ${currentMinLetters} letters",
   );
   print("Min temperature: ${currentMin}");
+  return (ShortestJoke,currentMinLetters,currentMin);
 }
 
 //function that doing the part of stage 1 of avrage temp and the part of stage 3 that give me the avrage num of letters
-void averagetempAverageLetters(
+(double,double) averagetempAverageLetters(
   List<double> list2,
   List<String> jokesList,
   List<String> cleanJokeLetters,
@@ -167,6 +170,7 @@ void averagetempAverageLetters(
   if (check == false) {
     print("No joke with the exact average letters");
   }
+  return (sum,lettersAverage);
 }
 
 //function that doing the stage 2 that counting how many times temp was over 25
@@ -197,4 +201,42 @@ void sortTempsHighToLow(List<double> list2) {
     listOfRawNumbers.removeAt(index);
   }
   print(listOfSortingTemps);
+}
+void percentageErrorCalculator(
+  List<double> list2,
+  List<String> jokesList,
+  List<String> cleanJokeLetters,){
+
+  int extremeMaxValueOfJoke = MaxTempLongestLetters(list2, jokesList, cleanJokeLetters).$2;
+  double extremeMaxValueOfTemp =  MaxTempLongestLetters(list2, jokesList, cleanJokeLetters).$3;
+  int extremeMinValueOfJoke = MinTempShortestLetters(list2, jokesList, cleanJokeLetters).$2;
+  double extremeMinValueOfTemp =  MinTempShortestLetters(list2, jokesList, cleanJokeLetters).$3;
+  double averageJoke = averagetempAverageLetters(list2,jokesList,cleanJokeLetters,).$2;
+  double average = averagetempAverageLetters(list2,jokesList,cleanJokeLetters,).$1;
+  num CurrentMax = 0;
+
+  num maxJokePercentageError = ((extremeMaxValueOfJoke-averageJoke)/averageJoke)*100;
+  num minJokePercentageError = (((extremeMinValueOfJoke-averageJoke)/averageJoke)*100)*-1;
+  num maxTempPercentageError = ((extremeMaxValueOfTemp-average)/average)*100;
+  num minTempPercentageError = (((extremeMinValueOfTemp-average)/average)*100)*-1;
+  List<num>listForCalculating = [maxJokePercentageError,minJokePercentageError,maxTempPercentageError,minTempPercentageError];
+
+  for (int i = 0; i < listForCalculating.length; i++) {
+    if (listForCalculating[i] > CurrentMax) {
+      CurrentMax = listForCalculating[i];
+    }
+  }
+
+  if (CurrentMax==maxJokePercentageError){
+    print("maxJokePercentageError is the highest $CurrentMax");
+  }
+  if (CurrentMax==minJokePercentageError){
+    print("minJokePercentageError is the highest $CurrentMax");
+  }
+  if (CurrentMax==maxTempPercentageError){
+    print("maxTempPercentageError is the highest $CurrentMax");
+  }
+  if (CurrentMax==minTempPercentageError){
+    print("minTempPercentageError is the highest $CurrentMax");
+  }
 }
