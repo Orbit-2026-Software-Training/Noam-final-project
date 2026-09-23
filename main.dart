@@ -8,12 +8,13 @@ void main() async {
   String contents = file.readAsStringSync();
   List<dynamic> jsonFileList = jsonDecode(contents);
   List<String> timesList = [];
-  List<String> list2 = [];
+  List<double> list2 = [];
   List<String> jokesList = [];
   List<String> cleanJokeLetters = [];
   for (var item in jsonFileList) {
     timesList.add(item['time'].toString());
-    list2.add(item['temperature'].toString());
+    double list = (item['temperature'] as num).toDouble();
+    list2.add(list);
   }
   //reading the api and make a list with all the 10 jokes
   Future<void> apiReading() async {
@@ -74,7 +75,7 @@ void main() async {
 
 //function that doing the part of stage 1 of max temp and the part of stage 3 that give me the longest joke
 void MaxTempLongestLetters(
-  List<String> list2,
+  List<double> list2,
   List<String> jokesList,
   List<String> cleanJokeLetters,
 ) {
@@ -82,9 +83,8 @@ void MaxTempLongestLetters(
   int currentMaxLetters = 0;
   String longestJoke = "";
   for (int i = 0; i < list2.length; i++) {
-    double list = double.parse(list2[i]);
-    if (list > CurrentMax) {
-      CurrentMax = list;
+    if (list2[i] > CurrentMax) {
+      CurrentMax = list2[i];
     }
   }
   List<String> listOfJokesWithOutSpaces = countLetters(
@@ -106,7 +106,7 @@ void MaxTempLongestLetters(
 
 //function that doing the part of stage 1 of min temp and the part of stage 3 that give me the shortest joke
 void MinTempShortestLetters(
-  List<String> list2,
+  List<double> list2,
   List<String> jokesList,
   List<String> cleanJokeLetters,
 ) {
@@ -114,9 +114,8 @@ void MinTempShortestLetters(
   int currentMinLetters = 1000;
   String ShortestJoke = "";
   for (int i = 0; i < list2.length; i++) {
-    double list = double.parse(list2[i]);
-    if (list < currentMin) {
-      currentMin = list;
+    if (list2[i] < currentMin) {
+      currentMin = list2[i];
     }
   }
   List<String> listOfJokesWithOutSpaces = countLetters(
@@ -138,7 +137,7 @@ void MinTempShortestLetters(
 
 //function that doing the part of stage 1 of avrage temp and the part of stage 3 that give me the avrage num of letters
 void averagetempAverageLetters(
-  List<String> list2,
+  List<double> list2,
   List<String> jokesList,
   List<String> cleanJokeLetters,
 ) {
@@ -146,8 +145,7 @@ void averagetempAverageLetters(
   num lettersSum = 0;
   bool check = false;
   for (int i = 0; i < list2.length; i++) {
-    double list = double.parse(list2[i]);
-    sum = sum + list;
+    sum = sum + list2[i];
   }
   sum = sum / list2.length;
   print("Average temperature: ${sum}");
@@ -172,11 +170,10 @@ void averagetempAverageLetters(
 }
 
 //function that doing the stage 2 that counting how many times temp was over 25
-void tempAbove25(List<String> list2) {
+void tempAbove25(List<double> list2) {
   int counter = 0;
   for (int i = 0; i < list2.length; i++) {
-    double list = double.parse(list2[i]);
-    if (list > 25) {
+    if (list2[i] > 25) {
       counter++;
     }
   }
@@ -184,24 +181,20 @@ void tempAbove25(List<String> list2) {
 }
 
 //function that sorting all the temps from highest to lowest
-void sortTempsHighToLow(List<String> list2) {
+void sortTempsHighToLow(List<double> list2) {
   List<double> listOfSortingTemps = [];
-  List<double> listOfRewNumbers = [];
-  for (int g = 0; g < list2.length; g++) {
-    double list = double.parse(list2[g]);
-    listOfRewNumbers.add(list);
-  }
-  while (listOfRewNumbers.isNotEmpty) {
+  List<double> listOfRawNumbers = list2.toList();
+  while (listOfRawNumbers.isNotEmpty) {
     int index = 0;
     double currentMaxTemp = 0;
-    for (int i = 0; i < listOfRewNumbers.length; i++) {
-      if (listOfRewNumbers[i] >= currentMaxTemp) {
-        currentMaxTemp = listOfRewNumbers[i];
+    for (int i = 0; i < listOfRawNumbers.length; i++) {
+      if (listOfRawNumbers[i] >= currentMaxTemp) {
+        currentMaxTemp = listOfRawNumbers[i];
         index = i;
       }
     }
     listOfSortingTemps.add(currentMaxTemp);
-    listOfRewNumbers.removeAt(index);
+    listOfRawNumbers.removeAt(index);
   }
   print(listOfSortingTemps);
 }
