@@ -33,41 +33,20 @@ void main() async {
   }
 
   await apiReading();
-  MaxTempLongestLetters(list2, jokesList, cleanJokeLetters);
-  MinTempShortestLetters(list2, jokesList, cleanJokeLetters);
-  averagetempAverageLetters(list2, jokesList, cleanJokeLetters);
+  var (_, extremeMaxValueOfJoke, extremeMaxValueOfTemp) = MaxTempLongestLetters(
+    list2,
+    jokesList,
+    cleanJokeLetters,
+  );
+  var (_, extremeMinValueOfJoke, extremeMinValueOfTemp) =
+      MinTempShortestLetters(list2, jokesList, cleanJokeLetters);
+  var (average, averageJoke) = averagetempAverageLetters(
+    list2,
+    jokesList,
+    cleanJokeLetters,
+  );
   //tempAbove25(list2);
   //sortTempsHighToLow(list2);
-  int extremeMaxValueOfJoke = MaxTempLongestLetters(
-    list2,
-    jokesList,
-    cleanJokeLetters,
-  ).$2;
-  double extremeMaxValueOfTemp = MaxTempLongestLetters(
-    list2,
-    jokesList,
-    cleanJokeLetters,
-  ).$3;
-  int extremeMinValueOfJoke = MinTempShortestLetters(
-    list2,
-    jokesList,
-    cleanJokeLetters,
-  ).$2;
-  double extremeMinValueOfTemp = MinTempShortestLetters(
-    list2,
-    jokesList,
-    cleanJokeLetters,
-  ).$3;
-  double averageJoke = averagetempAverageLetters(
-    list2,
-    jokesList,
-    cleanJokeLetters,
-  ).$2;
-  double average = averagetempAverageLetters(
-    list2,
-    jokesList,
-    cleanJokeLetters,
-  ).$1;
   num biggerPercentageErrorTemp = percentageErrorCalculator(
     extremeMaxValueOfTemp,
     extremeMinValueOfTemp,
@@ -83,16 +62,25 @@ void main() async {
     counterStage5,
     listForKeppingParamatersInStage5,
   );
-  counterStage5 = 2;
-  percentageErrorCalculator(
-    extremeMaxValueOfJoke,
-    extremeMinValueOfJoke,
-    averageJoke,
-    counterStage5,
-    listForKeppingParamatersInStage5,
-    biggerPercentageErrorTemp: biggerPercentageErrorTemp,
-    biggerPercentageErrorJoke: biggerPercentageErrorJoke,
-  );
+  if (biggerPercentageErrorJoke > biggerPercentageErrorTemp) {
+    if (biggerPercentageErrorJoke == listForKeppingParamatersInStage5[2]) {
+      print(
+        "the minimum Percentage Error from joke is $biggerPercentageErrorJoke",
+      );
+    }
+    if (biggerPercentageErrorJoke == listForKeppingParamatersInStage5[3])
+      print(
+        "the maximum Percentage Error from joke is  $biggerPercentageErrorJoke",
+      );
+  } else if (biggerPercentageErrorTemp == listForKeppingParamatersInStage5[0]) {
+    print(
+      "the minimum Percentage Error from temp is $biggerPercentageErrorTemp",
+    );
+  } else {
+    print(
+      "the maximum Percentage Error from temp is $biggerPercentageErrorTemp",
+    );
+  }
 }
 
 //a func that give me the counting of the letters
@@ -264,41 +252,13 @@ num percentageErrorCalculator(
   extremeMinValue,
   average,
   counter,
-  list, {
-  biggerPercentageErrorTemp,
-  biggerPercentageErrorJoke,
-}) {
+  list,
+) {
   num maxPercentageError = ((extremeMaxValue - average) / average) * 100;
-  num minPercentageError = (((extremeMinValue - average) / average) * 100) * -1;
+  num minPercentageError = (((extremeMinValue - average) / average) * 100);
   list.add(minPercentageError);
   list.add(maxPercentageError);
-  if (biggerPercentageErrorTemp != null) {
-    if (biggerPercentageErrorJoke > biggerPercentageErrorTemp) {
-      if (biggerPercentageErrorJoke == list[2]) {
-        print(
-          "the minimum Percentage Error from joke is $biggerPercentageErrorJoke",
-        );
-        return 0;
-      }
-      if (biggerPercentageErrorJoke == list[3])
-        print(
-          "the maximum Percentage Error from joke is  $biggerPercentageErrorJoke",
-        );
-      return 0;
-    } else {
-      if (biggerPercentageErrorTemp == list[0]) {
-        print(
-          "the minimum Percentage Error from temp is $biggerPercentageErrorTemp",
-        );
-        return 0;
-      } else {
-        print(
-          "the maximum Percentage Error from temp is $biggerPercentageErrorTemp",
-        );
-        return 0;
-      }
-    }
-  }
+
   if (counter == 0) {
     print("the minimum Percentage Error from temp is $minPercentageError");
     print("the maximum Percentage Error from temp is $maxPercentageError");
