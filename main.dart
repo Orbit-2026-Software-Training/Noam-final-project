@@ -4,6 +4,8 @@ import 'dart:convert';
 
 void main() async {
   //reading the json file and seperate the temp and the time to diffrent lists
+  List<num> listForKeppingParamatersInStage5 = [];
+  num counterStage5 = 0;
   File file = File('readings.json');
   String contents = file.readAsStringSync();
   List<dynamic> jsonFileList = jsonDecode(contents);
@@ -34,9 +36,63 @@ void main() async {
   MaxTempLongestLetters(list2, jokesList, cleanJokeLetters);
   MinTempShortestLetters(list2, jokesList, cleanJokeLetters);
   averagetempAverageLetters(list2, jokesList, cleanJokeLetters);
-  percentageErrorCalculator(list2, jokesList, cleanJokeLetters);
   //tempAbove25(list2);
   //sortTempsHighToLow(list2);
+  int extremeMaxValueOfJoke = MaxTempLongestLetters(
+    list2,
+    jokesList,
+    cleanJokeLetters,
+  ).$2;
+  double extremeMaxValueOfTemp = MaxTempLongestLetters(
+    list2,
+    jokesList,
+    cleanJokeLetters,
+  ).$3;
+  int extremeMinValueOfJoke = MinTempShortestLetters(
+    list2,
+    jokesList,
+    cleanJokeLetters,
+  ).$2;
+  double extremeMinValueOfTemp = MinTempShortestLetters(
+    list2,
+    jokesList,
+    cleanJokeLetters,
+  ).$3;
+  double averageJoke = averagetempAverageLetters(
+    list2,
+    jokesList,
+    cleanJokeLetters,
+  ).$2;
+  double average = averagetempAverageLetters(
+    list2,
+    jokesList,
+    cleanJokeLetters,
+  ).$1;
+  num biggerPercentageErrorTemp = percentageErrorCalculator(
+    extremeMaxValueOfTemp,
+    extremeMinValueOfTemp,
+    average,
+    counterStage5,
+    listForKeppingParamatersInStage5,
+  );
+  counterStage5 = 1;
+  num biggerPercentageErrorJoke = percentageErrorCalculator(
+    extremeMaxValueOfJoke,
+    extremeMinValueOfJoke,
+    averageJoke,
+    counterStage5,
+    listForKeppingParamatersInStage5,
+  );
+  counterStage5 = 2;
+  percentageErrorCalculator(
+    extremeMaxValueOfJoke,
+    extremeMinValueOfJoke,
+    averageJoke,
+    counterStage5,
+    listForKeppingParamatersInStage5,
+    biggerPercentageErrorTemp: biggerPercentageErrorTemp,
+    biggerPercentageErrorJoke: biggerPercentageErrorJoke,
+  );
 }
 
 //a func that give me the counting of the letters
@@ -75,7 +131,7 @@ void main() async {
 }
 
 //function that doing the part of stage 1 of max temp and the part of stage 3 that give me the longest joke
-(String,int,double) MaxTempLongestLetters(
+(String, int, double) MaxTempLongestLetters(
   List<double> list2,
   List<String> jokesList,
   List<String> cleanJokeLetters,
@@ -103,11 +159,11 @@ void main() async {
     "Joke with the most letters: ${longestJoke} with ${currentMaxLetters} letters",
   );
   print("Max temperature: ${CurrentMax}");
-  return (longestJoke,currentMaxLetters,CurrentMax);
+  return (longestJoke, currentMaxLetters, CurrentMax);
 }
 
 //function that doing the part of stage 1 of min temp and the part of stage 3 that give me the shortest joke
-(String,int,double) MinTempShortestLetters(
+(String, int, double) MinTempShortestLetters(
   List<double> list2,
   List<String> jokesList,
   List<String> cleanJokeLetters,
@@ -135,11 +191,11 @@ void main() async {
     "Joke with the least letters: ${ShortestJoke} with ${currentMinLetters} letters",
   );
   print("Min temperature: ${currentMin}");
-  return (ShortestJoke,currentMinLetters,currentMin);
+  return (ShortestJoke, currentMinLetters, currentMin);
 }
 
 //function that doing the part of stage 1 of avrage temp and the part of stage 3 that give me the avrage num of letters
-(double,double) averagetempAverageLetters(
+(double, double) averagetempAverageLetters(
   List<double> list2,
   List<String> jokesList,
   List<String> cleanJokeLetters,
@@ -170,7 +226,7 @@ void main() async {
   if (check == false) {
     print("No joke with the exact average letters");
   }
-  return (sum,lettersAverage);
+  return (sum, lettersAverage);
 }
 
 //function that doing the stage 2 that counting how many times temp was over 25
@@ -202,41 +258,60 @@ void sortTempsHighToLow(List<double> list2) {
   }
   print(listOfSortingTemps);
 }
-void percentageErrorCalculator(
-  List<double> list2,
-  List<String> jokesList,
-  List<String> cleanJokeLetters,){
 
-  int extremeMaxValueOfJoke = MaxTempLongestLetters(list2, jokesList, cleanJokeLetters).$2;
-  double extremeMaxValueOfTemp =  MaxTempLongestLetters(list2, jokesList, cleanJokeLetters).$3;
-  int extremeMinValueOfJoke = MinTempShortestLetters(list2, jokesList, cleanJokeLetters).$2;
-  double extremeMinValueOfTemp =  MinTempShortestLetters(list2, jokesList, cleanJokeLetters).$3;
-  double averageJoke = averagetempAverageLetters(list2,jokesList,cleanJokeLetters,).$2;
-  double average = averagetempAverageLetters(list2,jokesList,cleanJokeLetters,).$1;
-  num CurrentMax = 0;
-
-  num maxJokePercentageError = ((extremeMaxValueOfJoke-averageJoke)/averageJoke)*100;
-  num minJokePercentageError = (((extremeMinValueOfJoke-averageJoke)/averageJoke)*100)*-1;
-  num maxTempPercentageError = ((extremeMaxValueOfTemp-average)/average)*100;
-  num minTempPercentageError = (((extremeMinValueOfTemp-average)/average)*100)*-1;
-  List<num>listForCalculating = [maxJokePercentageError,minJokePercentageError,maxTempPercentageError,minTempPercentageError];
-
-  for (int i = 0; i < listForCalculating.length; i++) {
-    if (listForCalculating[i] > CurrentMax) {
-      CurrentMax = listForCalculating[i];
+num percentageErrorCalculator(
+  extremeMaxValue,
+  extremeMinValue,
+  average,
+  counter,
+  list, {
+  biggerPercentageErrorTemp,
+  biggerPercentageErrorJoke,
+}) {
+  num maxPercentageError = ((extremeMaxValue - average) / average) * 100;
+  num minPercentageError = (((extremeMinValue - average) / average) * 100) * -1;
+  list.add(minPercentageError);
+  list.add(maxPercentageError);
+  if (biggerPercentageErrorTemp != null) {
+    if (biggerPercentageErrorJoke > biggerPercentageErrorTemp) {
+      if (biggerPercentageErrorJoke == list[2]) {
+        print(
+          "the minimum Percentage Error from joke is $biggerPercentageErrorJoke",
+        );
+        return 0;
+      }
+      if (biggerPercentageErrorJoke == list[3])
+        print(
+          "the maximum Percentage Error from joke is  $biggerPercentageErrorJoke",
+        );
+      return 0;
+    } else {
+      if (biggerPercentageErrorTemp == list[0]) {
+        print(
+          "the minimum Percentage Error from temp is $biggerPercentageErrorTemp",
+        );
+        return 0;
+      } else {
+        print(
+          "the maximum Percentage Error from temp is $biggerPercentageErrorTemp",
+        );
+        return 0;
+      }
     }
   }
-
-  if (CurrentMax==maxJokePercentageError){
-    print("maxJokePercentageError is the highest $CurrentMax");
+  if (counter == 0) {
+    print("the minimum Percentage Error from temp is $minPercentageError");
+    print("the maximum Percentage Error from temp is $maxPercentageError");
   }
-  if (CurrentMax==minJokePercentageError){
-    print("minJokePercentageError is the highest $CurrentMax");
+  if (counter == 1) {
+    print("the minimum Percentage Error from joke is $minPercentageError");
+    print("the maximum Percentage Error from joke is $maxPercentageError");
   }
-  if (CurrentMax==maxTempPercentageError){
-    print("maxTempPercentageError is the highest $CurrentMax");
-  }
-  if (CurrentMax==minTempPercentageError){
-    print("minTempPercentageError is the highest $CurrentMax");
+  if (maxPercentageError > minPercentageError) {
+    return maxPercentageError;
+  } else if (maxPercentageError < minPercentageError) {
+    return minPercentageError;
+  } else {
+    return 0;
   }
 }
